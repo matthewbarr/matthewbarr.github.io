@@ -1,16 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
-  <link href="http://matthewbarr.github.io/atom.xml" rel="self"/>
-  <link href="http://matthewbarr.github.io/"/>
-  <updated>2014-01-10T11:54:37-05:00</updated>
-  <id>http://matthewbarr.github.io/</id>
+  <title><![CDATA[Random Natterings]]></title>
+  <link href="http://blog.mbarr.net/atom.xml" rel="self"/>
+  <link href="http://blog.mbarr.net/"/>
+  <updated>2014-01-12T02:00:04-05:00</updated>
+  <id>http://blog.mbarr.net/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[Matthew Barr]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Uhm... Hello?]]></title>
+    <link href="http://blog.mbarr.net/blog/2014/01/12/uhm-dot-dot-dot-hello/"/>
+    <updated>2014-01-12T01:29:12-05:00</updated>
+    <id>http://blog.mbarr.net/blog/2014/01/12/uhm-dot-dot-dot-hello</id>
+    <content type="html"><![CDATA[<p>So, this is the new blog.  I&rsquo;m hoping to talk about some of the things currently going on professionally, between puppet work, some inputs from #monitoringsucks responses, and various other things.</p>
+
+<p>I&rsquo;m probably going to flit from topic to topic, and may post some of my code that I&rsquo;m working.</p>
+
+<p>I&rsquo;m also intersted in how to effectivly build new systes in a resilient fashion, inside AWS.</p>
+
+<p>Somewhere in there, we may even have to build a dashboard for self service.</p>
+
+<p>Coming up, in no particular order:</p>
+
+<ul>
+<li>heira_params &ndash; because I don&rsquo;t want to bother with an ENC.</li>
+<li>puppet resillancy with a multi-AZ &amp; multi-region app.</li>
+<li>App redundancy for the same..  or how to survive an AWS zone/region outage</li>
+<li>metrics, monitoring, and more.</li>
+</ul>
+
+]]></content>
+  </entry>
   
 </feed>
