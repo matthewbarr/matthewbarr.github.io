@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Puppet Sshkey + IPA + Centos = Odd Failure of Ssh Known_hosts - Random Natterings</title>
+  <title>What I'm Working On.. - Random Natterings</title>
   <meta name="author" content="Matthew Barr">
 
   
-  <meta name="description" content="Recently saw this at work: Server with IPA (freeipa.org), running puppet 3.X (3.2.1, but not really relevant.)  Centos 6.4. Normally Puppet&rsquo;s &hellip;">
+  <meta name="description" content="So, i&rsquo;ve been doing some work that others might care about. I&rsquo;ll probably expand these into their own things, but i want them out of my &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.mbarr.net/blog/2013/06/19/puppet-sshkey-ipa-centos-odd-failure-of-ssh-known_hosts">
+  <link rel="canonical" href="http://blog.mbarr.net/blog/2013/01/17/what-im-working-on">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Random Natterings" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">Puppet Sshkey + IPA + Centos = Odd Failure of Ssh Known_hosts</h1>
+      <h1 class="entry-title">What I'm Working On..</h1>
     
     
       <p class="meta">
@@ -84,41 +84,26 @@
   
 
 
-<time datetime="2013-06-19T16:48:05-04:00" pubdate data-updated="true">Jun 19<span>th</span>, 2013</time>
+<time datetime="2013-01-17T11:35:56-05:00" pubdate data-updated="true">Jan 17<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Recently saw this at work:</p>
+<div class="entry-content"><p>So, i&rsquo;ve been doing some work that others might care about.</p>
 
-<p><em>Server with IPA (freeipa.org), running puppet 3.X (3.2.1, but not really relevant.)  Centos 6.4.</em></p>
+<p>I&rsquo;ll probably expand these into their own things, but i want them out of my head:</p>
 
-<h2>Normally</h2>
+<ol>
+<li><p>Jenkins &ndash; puppet module.  Auto slave</p></li>
+<li><p>Best practices for puppet modules: parameters?  How configurable?  Do we use parameters into the deeper parts, or can you use scoped variables? enterprise puppet modules:  repo&rsquo;s? code reusue?</p></li>
+<li><p>module for puppet parseing?  should be trivial?  Maybe a Mergatron module for jenkins? or a long writeup of how to get it working from an ops perspective.</p></li>
+<li><p>Meta modules discussion.  Compare the literature, from <a href="http://www.craigdunn.org/2012/05/239/">http://www.craigdunn.org/2012/05/239/</a></p></li>
+</ol>
 
-<p>Puppet&rsquo;s <a href="http://docs.puppetlabs.com/references/latest/type.html#sshkey">sshkey type</a>  creates /etc/ssh/ssh_known_hosts by default.</p>
 
-<p>SSH defaults to checking /etc/ssh/ssh_known_hosts &amp; /etc/ssh/ssh_known_hosts2, if GlobalKnownHostsFile isn&rsquo;t set inside <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh_config">ssh_config</a>.   RHEL / Centos doesn&rsquo;t have it in the default config file, so it&rsquo;s probably using the default for you.</p>
-
-<p>All very good.</p>
-
-<p>BTW- they could fix a long time sshkey bug: <a href="https://projects.puppetlabs.com/issues/4145">https://projects.puppetlabs.com/issues/4145</a> &ndash; it defaults to mode 600, which really needs to be 644 to be useful.</p>
-
-<h2>With IPA</h2>
-
-<p>If you&rsquo;re using IPA, though, with SSSD, it adds this to your /etc/ssh/ssh_config:</p>
-
-<pre><code>GlobalKnownHostsFile /var/lib/sss/pubconf/known_hosts
-</code></pre>
-
-<p>This in turn disables the defaults, and it <strong>only</strong> checks /etc/ssh/ssh_known_hosts2. <strong>Not</strong> /etc/ssh/ssh_known_hosts.</p>
-
-<p>Fix is to use a target parameter, for the sshkey, to make sure you write to /etc/ssh/ssh_known_hosts2.</p>
-
-<p>Not sure how I&rsquo;m going to get a bug opened on this. It&rsquo;s not a puppet bug at all. It&rsquo;s probably a bug for OpenSSH, but I don&rsquo;t have a binary that they build, so I can&rsquo;t submit a bug :(</p>
-
-<p>BTW: for those that are interested: <code>strace ssh HOSTNAME</code> was how I found the details.  Since it stops and waits for the human to agree to add the host key to known_hosts, it&rsquo;s actually fairly easy to strace.</p>
+<p>&amp; to the lego brick :  <a href="http://sysadvent.blogspot.com/2012/12/day-13-configuration-management-as-legos.html">http://sysadvent.blogspot.com/2012/12/day-13-configuration-management-as-legos.html</a></p>
 </div>
 
 
@@ -141,7 +126,7 @@
   
 
 
-<time datetime="2013-06-19T16:48:05-04:00" pubdate data-updated="true">Jun 19<span>th</span>, 2013</time>
+<time datetime="2013-01-17T11:35:56-05:00" pubdate data-updated="true">Jan 17<span>th</span>, 2013</time>
       
 
 
@@ -149,7 +134,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.mbarr.net/blog/2013/06/19/puppet-sshkey-ipa-centos-odd-failure-of-ssh-known_hosts/" data-via="matthewbarr" data-counturl="http://blog.mbarr.net/blog/2013/06/19/puppet-sshkey-ipa-centos-odd-failure-of-ssh-known_hosts/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.mbarr.net/blog/2013/01/17/what-im-working-on/" data-via="matthewbarr" data-counturl="http://blog.mbarr.net/blog/2013/01/17/what-im-working-on/" >Tweet</a>
   
   
   
@@ -158,10 +143,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/01/17/what-im-working-on/" title="Previous Post: What I'm working on..">&laquo; What I'm working on..</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/06/27/rhel-centos-6-software-collections/" title="Next Post: RHEL / Centos 6 Software Collections">RHEL / Centos 6 Software Collections &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2013/06/19/puppet-sshkey-ipa-centos-odd-failure-of-ssh-known_hosts/" title="Next Post: Puppet sshkey + IPA + Centos = odd failure of ssh known_hosts">Puppet sshkey + IPA + Centos = odd failure of ssh known_hosts &raquo;</a>
       
     </p>
   </footer>

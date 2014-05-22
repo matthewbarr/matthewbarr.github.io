@@ -4,7 +4,7 @@
   <title><![CDATA[Random Natterings]]></title>
   <link href="http://blog.mbarr.net/atom.xml" rel="self"/>
   <link href="http://blog.mbarr.net/"/>
-  <updated>2014-05-22T17:11:57-04:00</updated>
+  <updated>2014-05-22T17:13:01-04:00</updated>
   <id>http://blog.mbarr.net/</id>
   <author>
     <name><![CDATA[Matthew Barr]]></name>
@@ -507,6 +507,27 @@ which ruby
 <p>Not sure how I&rsquo;m going to get a bug opened on this. It&rsquo;s not a puppet bug at all. It&rsquo;s probably a bug for OpenSSH, but I don&rsquo;t have a binary that they build, so I can&rsquo;t submit a bug :(</p>
 
 <p>BTW: for those that are interested: <code>strace ssh HOSTNAME</code> was how I found the details.  Since it stops and waits for the human to agree to add the host key to known_hosts, it&rsquo;s actually fairly easy to strace.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[What I'm Working On..]]></title>
+    <link href="http://blog.mbarr.net/blog/2013/01/17/what-im-working-on/"/>
+    <updated>2013-01-17T11:35:56-05:00</updated>
+    <id>http://blog.mbarr.net/blog/2013/01/17/what-im-working-on</id>
+    <content type="html"><![CDATA[<p>So, i&rsquo;ve been doing some work that others might care about.</p>
+
+<p>I&rsquo;ll probably expand these into their own things, but i want them out of my head:</p>
+
+<ol>
+<li><p>Jenkins &ndash; puppet module.  Auto slave</p></li>
+<li><p>Best practices for puppet modules: parameters?  How configurable?  Do we use parameters into the deeper parts, or can you use scoped variables? enterprise puppet modules:  repo&rsquo;s? code reusue?</p></li>
+<li><p>module for puppet parseing?  should be trivial?  Maybe a Mergatron module for jenkins? or a long writeup of how to get it working from an ops perspective.</p></li>
+<li><p>Meta modules discussion.  Compare the literature, from <a href="http://www.craigdunn.org/2012/05/239/">http://www.craigdunn.org/2012/05/239/</a></p></li>
+</ol>
+
+
+<p>&amp; to the lego brick :  <a href="http://sysadvent.blogspot.com/2012/12/day-13-configuration-management-as-legos.html">http://sysadvent.blogspot.com/2012/12/day-13-configuration-management-as-legos.html</a></p>
 ]]></content>
   </entry>
   
