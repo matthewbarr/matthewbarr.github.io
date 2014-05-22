@@ -359,6 +359,480 @@
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/26/mysql-slave-corrupted-relay-log/">Mysql Slave Corrupted Relay Log</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-26T12:22:58-04:00" pubdate data-updated="true">Jul 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you have a slave that has a corrupted relay log, it will show:
+<code>Last_Error: Could not parse relay log event entry. The possible reasons are: the master's binary log is corrupted (you can check this by running 'mysqlbinlog' on the binary log), the slave's relay log is corrupted (you can check this by running 'mysqlbinlog' on the relay log), a network problem, or a bug in the master's or slave's MySQL code. If you want to check the master's binary log or slave's relay log, you will be able to know their names by issuing 'SHOW SLAVE STATUS' on this slave.</code>
+in it&rsquo;s mysqld.log &amp; slave status.</p>
+
+<p>This can happen because of a crash on the mysql slave, or a disk filling up, or something.</p>
+
+<p>You can fix it by executing on the slave in question:</p>
+
+<ol>
+<li>STOP SLAVE</li>
+<li>SHOW SLAVE STATUS</li>
+<li>Note down ‘Relay_Master_Log_File’ and ‘Exec_Master_Log_Pos’ entries.</li>
+<li>RESET SLAVE</li>
+<li>CHANGE MASTER TO ….. (use MASTER_LOG_FILE=relay_master_log_file and MASTER_LOG_POS=exec_master_log_pos from Step 3)</li>
+<li>START SLAVE</li>
+</ol>
+
+
+<p>For example, #5 might be something like:</p>
+
+<pre><code>change master to master_log_file="mysql-bin.001878",master_log_pos=898514732;
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/26/ipa-server-client-commands/">IPA Server & Client Commands</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-26T12:19:37-04:00" pubdate data-updated="true">Jul 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Not that this isn&rsquo;t available elsewhere, but&hellip; just keeping it nicely stored somewhere for myself.</p>
+
+<p>on ipa server:</p>
+
+<pre><code>ipa host-add host.example.com --password=MEEEEEP --force
+</code></pre>
+
+<p>on client:</p>
+
+<pre><code>ipa-client-install --hostname=host.example.com --domain=example.com --password=MEEEEEP --realm=EXAMPLE.COM --server=ipa.example.com --unattended --mkhomedir
+</code></pre>
+
+<hr />
+
+<figure class='code'><figcaption><span>Hostadd.sh</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'><span class="nb">echo</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;ipa host-add $1.example.com --password=MEEEEEP --force&quot;</span>
+</span><span class='line'><span class="nb">echo</span>
+</span><span class='line'><span class="nb">echo</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;ipa-client-install --hostname=$1.example.com --domain=example.com  --password=MEEEEEP --realm=EXAMPLE.COM --server=ipa.example.com --unattended --mkhomedir&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">echo</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<p>Uninstall IPA</p>
+
+<figure class='code'><figcaption><span>Uninstall IPA</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>root@solr05 ~<span class="o">]</span><span class="c"># ipa-client-install --uninstall -U</span>
+</span><span class='line'>Unenrolling client from IPA server
+</span><span class='line'>Removing Kerberos service principals from /etc/krb5.keytab
+</span><span class='line'>Disabling client Kerberos and LDAP configurations
+</span><span class='line'>Restoring client configuration files
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/26/change-ipa-password-expiration-for-a-bunch-of-users/">Change IPA Password Expiration for a Bunch of Users</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-26T12:13:42-04:00" pubdate data-updated="true">Jul 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Run this on a ipa server.  It&rsquo;ll work there..</p>
+
+<ol>
+<li><p>Find users with passwords that expire before DATE below</p>
+
+<pre><code> ldapsearch -Y GSSAPI -h localhost -b "cn=users,cn=accounts,dc=ayisnap,dc=com" '(krbPasswordExpiration&lt;=20140101000000Z)'&gt;lsearch2`
+</code></pre></li>
+<li><p>Change the actual expiration date for those users to date :1/1/2015.</p></li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>grep dn lsearch2  &gt; dn
+</span><span class='line'><span class="nv">IFS</span><span class="o">=</span><span class="s1">$&#39;\n&#39;</span>
+</span><span class='line'><span class="k">for </span>i in  <span class="sb">`</span>cat dn<span class="sb">`</span>;
+</span><span class='line'>  <span class="k">do </span><span class="nb">echo</span> <span class="nv">$i</span>;
+</span><span class='line'>  <span class="nb">echo</span> <span class="s2">&quot;changetype: modify&quot;</span>;
+</span><span class='line'>  <span class="nb">echo</span> <span class="s2">&quot;replace: krbpasswordexpiration&quot;</span>;
+</span><span class='line'>  <span class="nb">echo</span> <span class="s2">&quot;krbpasswordexpiration: 20150101000000Z&quot;</span>;
+</span><span class='line'>  <span class="nb">echo</span> ;
+</span><span class='line'><span class="k">done</span> &gt; <span class="nb">test</span>
+</span><span class='line'>ldapmodify -D <span class="s2">&quot;cn=Directory Manager&quot;</span> -W -h localhost -f <span class="nb">test</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/26/building-fpm-on-rhel/">Building FPM on RHEL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-26T11:57:28-04:00" pubdate data-updated="true">Jul 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>(If you have a version of FPM installed, you may want to remove &amp; install the newest version before building&hellip;)</p>
+
+<p>Building FPM:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>gem install --install-dir /tmp/gems fpm
+</span><span class='line'><span class="nb">cd</span> /tmp/gems/cache/
+</span><span class='line'>
+</span><span class='line'>fpm -s gem -t rpm -d rpm-build -d rubygems -d ruby -d ruby-devel -d kernel-devel -d gcc -d gcc-c++ -d make -e fpm*.gem
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Building other gems:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>fpm -s gem -t rpm -d rubygems -d ruby *.gem
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/26/blockdiag-network-maps-on-rhel/">BlockDiag Network Maps on RHEL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-26T11:50:15-04:00" pubdate data-updated="true">Jul 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To install blockdiag:</p>
+
+<pre><code>yum install python-reportlab python-imaging
+easy_install "blockdiag[pdf]"
+</code></pre>
+
+<p>Generate a pdf</p>
+
+<pre><code>nwdiag -Tpdf routing.diag -f /usr/share/fonts/dejavu/DejaVuSans.ttf
+</code></pre>
+
+<p>Generate a SVG</p>
+
+<pre><code>nwdiag -Tsvg routing.diag
+</code></pre>
+
+<p>Generate a png.  (Not as pretty, actually.)</p>
+
+<pre><code>nwdiag routing.diag
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/27/rhel-centos-6-software-collections/">RHEL / Centos 6 Software Collections</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T17:14:14-04:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So, there&rsquo;s a new way to use multiple versions of languages, such as Ruby, on RHEL, without breaking the system.  I&rsquo;ve got this down, so I thought I should share it.</p>
+
+<p>In this case, it&rsquo;s replacing the need for RVM, and moving to a much more standardized system.  I <del>don&rsquo;t love</del> can&rsquo;t stand having GCC installed on production servers, so this is much better.</p>
+
+<p>SCL &ndash; Software Collections :)</p>
+
+<p>The goal of this was to get a recent version of Fog working on RHEL 6 / Centos 6.</p>
+
+<p>First:  get the SCL repo:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> /etc/yum.repos.d<span class="sb">`</span>
+</span><span class='line'>wget http://people.redhat.com/bkabrda/scl_ruby193.repo
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That gives you the basics, but we also need to get some pieces for Fog, compiled for SCL. Thanks to the Katello Project, which is packaging Fog for use w/ Foreman, we can add their repo. You&rsquo;ll have to make a repo for this, though:</p>
+
+<p><a href="http://fedorapeople.org/groups/katello/releases/yum/foreman-nightly/RHEL/6Server/x86_64/">http://fedorapeople.org/groups/katello/releases/yum/foreman-nightly/RHEL/6Server/x86_64/</a></p>
+
+<p>&mdash;You could probably use that as your repo for ruby_193, even without the above scl repo.</p>
+
+<p>This is what the repo file would look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[foreman-nightly]
+</span><span class='line'>name=Foreman Nightly
+</span><span class='line'>baseurl=http://fedorapeople.org/groups/katello/releases/yum/foreman-nightly/RHEL/6Server/x86_64/
+</span><span class='line'>enabled=1
+</span><span class='line'>gpgcheck=0</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Now, install ruby_193:</h3>
+
+<pre><code>yum install ruby193-ruby ruby193-rubygem-fog   ruby193-rubygem-rbvmomi
+</code></pre>
+
+<p>Now, you can use it:</p>
+
+<pre><code>scl enable ruby193 bash
+which ruby
+</code></pre>
+
+<hr />
+
+<p>One thing, if you want to use ruby_193 inside scripts, you can use a stub for it:</p>
+
+<pre><code>/usr/bin/ruby193-ruby
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/19/puppet-sshkey-ipa-centos-odd-failure-of-ssh-known_hosts/">Puppet Sshkey + IPA + Centos = Odd Failure of Ssh Known_hosts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-19T16:48:05-04:00" pubdate data-updated="true">Jun 19<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently saw this at work:</p>
+
+<p><em>Server with IPA (freeipa.org), running puppet 3.X (3.2.1, but not really relevant.)  Centos 6.4.</em></p>
+
+<h2>Normally</h2>
+
+<p>Puppet&rsquo;s <a href="http://docs.puppetlabs.com/references/latest/type.html#sshkey">sshkey type</a>  creates /etc/ssh/ssh_known_hosts by default.</p>
+
+<p>SSH defaults to checking /etc/ssh/ssh_known_hosts &amp; /etc/ssh/ssh_known_hosts2, if GlobalKnownHostsFile isn&rsquo;t set inside <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh_config">ssh_config</a>.   RHEL / Centos doesn&rsquo;t have it in the default config file, so it&rsquo;s probably using the default for you.</p>
+
+<p>All very good.</p>
+
+<p>BTW- they could fix a long time sshkey bug: <a href="https://projects.puppetlabs.com/issues/4145">https://projects.puppetlabs.com/issues/4145</a> &ndash; it defaults to mode 600, which really needs to be 644 to be useful.</p>
+
+<h2>With IPA</h2>
+
+<p>If you&rsquo;re using IPA, though, with SSSD, it adds this to your /etc/ssh/ssh_config:</p>
+
+<pre><code>GlobalKnownHostsFile /var/lib/sss/pubconf/known_hosts
+</code></pre>
+
+<p>This in turn disables the defaults, and it <strong>only</strong> checks /etc/ssh/ssh_known_hosts2. <strong>Not</strong> /etc/ssh/ssh_known_hosts.</p>
+
+<p>Fix is to use a target parameter, for the sshkey, to make sure you write to /etc/ssh/ssh_known_hosts2.</p>
+
+<p>Not sure how I&rsquo;m going to get a bug opened on this. It&rsquo;s not a puppet bug at all. It&rsquo;s probably a bug for OpenSSH, but I don&rsquo;t have a binary that they build, so I can&rsquo;t submit a bug :(</p>
+
+<p>BTW: for those that are interested: <code>strace ssh HOSTNAME</code> was how I found the details.  Since it stops and waits for the human to agree to add the host key to known_hosts, it&rsquo;s actually fairly easy to strace.</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
     <a href="/blog/archives">Blog Archives</a>
@@ -381,6 +855,14 @@
     
       <li class="post">
         <a href="/blog/2014/01/12/uhm-dot-dot-dot-hello/">Uhm&#8230; Hello?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/26/mysql-slave-corrupted-relay-log/">Mysql Slave Corrupted Relay Log</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/26/ipa-server-client-commands/">IPA Server & Client Commands</a>
       </li>
     
   </ul>
