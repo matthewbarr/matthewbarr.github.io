@@ -9,7 +9,7 @@
   <meta name="author" content="Matthew Barr">
 
   
-  <meta name="description" content="So&hellip; The office hit a point where I had way too many modules installed from the forge &amp; git, and it was past the point of being a problem. &hellip;">
+  <meta name="description" content="So&hellip; The office hit a point where I had way too many modules installed from the forge &amp; git, and it was past the point of being a problem &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,30 +96,85 @@
 
   <div class="entry-content"><p>So&hellip; The office hit a point where I had way too many modules installed from the forge &amp; git, and it was past the point of being a problem.</p>
 
-<p>We&rsquo;re using 2 different sets of puppet stacks, similar, but not quite the same, and testing a third:</p>
-
-<ol>
-<li>one to build AMI&rsquo;s, installing software, but typically not starting it.</li>
-<li>the full build</li>
-<li>testing docker</li>
-</ol>
-
+<p>(Beyond the maintaince problem, we also hit an issue for using <a href="#packer">Packer &amp; Docker</a> )</p>
 
 <p>We&rsquo;ve implemented a hybrid roles &amp; providers model, so we end up w/ quite a few custom modules for our needs.</p>
 
-<p>However,</p>
+<p>We had 45 modules.  It was starting to get difficult to find our library modules, from our custom ones.</p>
 
-<p>|activemq|concat|   git|    kenshosensu|r53dns
-|apache|    dasher| graphite|logrotate|rabbitmq
-|apt|   datacat|    hiera_param|logstash|redirector
-|augeasproviders|elasticsearch|inifile| mcollective|sensu
-|boolean|   epel|   java|   nginx|  staging
-|bunny| erlang| java_ks|    ntp|    stdlib
-|celery|    file_concat|kenshoelasticsearch puppet_zulip|users
-|code|  firewall|kenshologstash|puppetcrontab|vcsrepo
-|common|    flower| kenshorepo|python|  webserver</p>
+<p>I&rsquo;ve seen people talking about <a href="https://github.com/rodjek/librarian-puppet">Librarian Puppet</a>, and about <a href="https://github.com/adrienthebo/r10k">R10K</a>.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>(FYI: <a href="http://garylarizza.com/blog/2014/02/18/puppet-workflow-part-3/">http://garylarizza.com/blog/2014/02/18/puppet-workflow-part-3/</a> is a very explanation of why you might use R10K, and how..)</p>
+
+<p>However, I <em>really</em> didn&rsquo;t want to have to move all my code to a new repo, and especially didn&rsquo;t want to move each module to it&rsquo;s <em>own</em> repo.  This is all being maintained by one person right now, and the dev&rsquo;s have enough trouble w/ it being in it&rsquo;s own repo, vs the main code repo.</p>
+
+<p>Eventually I realzied that I could move the custom modules to their own module directory, and use the main &ldquo;modules&rdquo; directory for librarian-puppet.</p>
+
+<p>In order for this to work, I had to modify puppet.conf to have</p>
+
+<pre><code>modulepath =  $confdir/modules-local:$confdir/modules
+</code></pre>
+
+<p>On my server w/ (older, pre 3.5) dynamic environments, I used:</p>
+
+<pre><code>    modulepath =  $confdir/environments/$environment/modules-local:$confdir/environments/$environment/modules
+</code></pre>
+
+<p>Once the Puppetfile was created, I just had to run:</p>
+
+<pre><code>librarian-puppet install
+</code></pre>
+
+<p>Here&rsquo;s the Puppetfile we used, and what it produces:</p>
+
+<figure class='code'><figcaption><span>Puppetfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>forge "http://forge.puppetlabs.com"
+</span><span class='line'>
+</span><span class='line'>mod "rodjek/logrotate"
+</span><span class='line'>
+</span><span class='line'>mod "elasticsearch/logstash"
+</span><span class='line'>mod "elasticsearch/elasticsearch"
+</span><span class='line'>mod "sensu/sensu"
+</span><span class='line'>mod "garethr/graphite"
+</span><span class='line'>
+</span><span class='line'>mod "puppetlabs/ntp"
+</span><span class='line'>mod "puppetlabs/mcollective",
+</span><span class='line'>  :git =&gt; 'https://github.com/matthewbarr/puppetlabs-mcollective.git',
+</span><span class='line'>  :ref =&gt; 'kensho'
+</span><span class='line'>
+</span><span class='line'>mod "puppetlabs/vcsrepo"
+</span><span class='line'>mod "puppetlabs/git"
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>mod "jfryman/nginx"
+</span><span class='line'>mod "puppetlabs/inifile"
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Generates:</p>
+
+<figure class='code'><figcaption><span>Puppetfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -171,54 +226,7 @@
 </span><span class='line'>└── sensu-sensu (v1.0.0)</span></code></pre></td></tr></table></div></figure>
 
 
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>forge "http://forge.puppetlabs.com"
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>mod "rodjek/logrotate"
-</span><span class='line'>
-</span><span class='line'>mod "elasticsearch/logstash"
-</span><span class='line'>mod "elasticsearch/elasticsearch"
-</span><span class='line'>mod "sensu/sensu"
-</span><span class='line'>
-</span><span class='line'>mod "puppetlabs/ntp"
-</span><span class='line'>mod "puppetlabs/mcollective",
-</span><span class='line'>  :git =&gt; 'https://github.com/matthewbarr/puppetlabs-mcollective.git',
-</span><span class='line'>  :ref =&gt; 'kensho'
-</span><span class='line'>
-</span><span class='line'>mod "puppetlabs/vcsrepo"
-</span><span class='line'>mod "puppetlabs/git"
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>mod "jfryman/nginx"
-</span><span class='line'>mod "garethr/graphite"
-</span><span class='line'>mod "puppetlabs/inifile"
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>Which is 25/45 of my original modules.  I was also able to remove a few dependencies, and upgraded a few of the modules.</p>
 </div>
   
   

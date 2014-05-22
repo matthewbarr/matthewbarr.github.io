@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Puppet | Random Natterings]]></title>
   <link href="http://blog.mbarr.net/blog/categories/puppet/atom.xml" rel="self"/>
   <link href="http://blog.mbarr.net/"/>
-  <updated>2014-05-22T12:25:07-04:00</updated>
+  <updated>2014-05-22T15:02:17-04:00</updated>
   <id>http://blog.mbarr.net/</id>
   <author>
     <name><![CDATA[Matthew Barr]]></name>
@@ -20,28 +20,60 @@
     <id>http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet</id>
     <content type="html"><![CDATA[<p>So&hellip; The office hit a point where I had way too many modules installed from the forge &amp; git, and it was past the point of being a problem.</p>
 
-<p>We&rsquo;re using 2 different sets of puppet stacks, similar, but not quite the same, and testing a third:</p>
-
-<ol>
-<li>one to build AMI&rsquo;s, installing software, but typically not starting it.</li>
-<li>the full build</li>
-<li>testing docker</li>
-</ol>
-
+<p>(Beyond the maintaince problem, we also hit an issue for using <a href="#packer">Packer &amp; Docker</a> )</p>
 
 <p>We&rsquo;ve implemented a hybrid roles &amp; providers model, so we end up w/ quite a few custom modules for our needs.</p>
 
-<p>However,</p>
+<p>We had 45 modules.  It was starting to get difficult to find our library modules, from our custom ones.</p>
 
-<p>|activemq|concat|   git|    kenshosensu|r53dns
-|apache|    dasher| graphite|logrotate|rabbitmq
-|apt|   datacat|    hiera_param|logstash|redirector
-|augeasproviders|elasticsearch|inifile| mcollective|sensu
-|boolean|   epel|   java|   nginx|  staging
-|bunny| erlang| java_ks|    ntp|    stdlib
-|celery|    file_concat|kenshoelasticsearch puppet_zulip|users
-|code|  firewall|kenshologstash|puppetcrontab|vcsrepo
-|common|    flower| kenshorepo|python|  webserver</p>
+<p>I&rsquo;ve seen people talking about <a href="https://github.com/rodjek/librarian-puppet">Librarian Puppet</a>, and about <a href="https://github.com/adrienthebo/r10k">R10K</a>.</p>
+
+<p>(FYI: <a href="http://garylarizza.com/blog/2014/02/18/puppet-workflow-part-3/">http://garylarizza.com/blog/2014/02/18/puppet-workflow-part-3/</a> is a very explanation of why you might use R10K, and how..)</p>
+
+<p>However, I <em>really</em> didn&rsquo;t want to have to move all my code to a new repo, and especially didn&rsquo;t want to move each module to it&rsquo;s <em>own</em> repo.  This is all being maintained by one person right now, and the dev&rsquo;s have enough trouble w/ it being in it&rsquo;s own repo, vs the main code repo.</p>
+
+<p>Eventually I realzied that I could move the custom modules to their own module directory, and use the main &ldquo;modules&rdquo; directory for librarian-puppet.</p>
+
+<p>In order for this to work, I had to modify puppet.conf to have</p>
+
+<pre><code>modulepath =  $confdir/modules-local:$confdir/modules
+</code></pre>
+
+<p>On my server w/ (older, pre 3.5) dynamic environments, I used:</p>
+
+<pre><code>    modulepath =  $confdir/environments/$environment/modules-local:$confdir/environments/$environment/modules
+</code></pre>
+
+<p>Once the Puppetfile was created, I just had to run:</p>
+
+<pre><code>librarian-puppet install
+</code></pre>
+
+<p>Here&rsquo;s the Puppetfile we used, and what it produces:</p>
+
+<p>```plain Puppetfile
+forge &ldquo;<a href="http://forge.puppetlabs.com">http://forge.puppetlabs.com</a>&rdquo;</p>
+
+<p>mod &ldquo;rodjek/logrotate&rdquo;</p>
+
+<p>mod &ldquo;elasticsearch/logstash&rdquo;
+mod &ldquo;elasticsearch/elasticsearch&rdquo;
+mod &ldquo;sensu/sensu&rdquo;
+mod &ldquo;garethr/graphite&rdquo;</p>
+
+<p>mod &ldquo;puppetlabs/ntp&rdquo;
+mod &ldquo;puppetlabs/mcollective&rdquo;,
+  :git => &lsquo;<a href="https://github.com/matthewbarr/puppetlabs-mcollective.git">https://github.com/matthewbarr/puppetlabs-mcollective.git</a>&rsquo;,
+  :ref => &lsquo;kensho&rsquo;</p>
+
+<p>mod &ldquo;puppetlabs/vcsrepo&rdquo;
+mod &ldquo;puppetlabs/git&rdquo;</p>
+
+<p>mod &ldquo;jfryman/nginx&rdquo;
+mod &ldquo;puppetlabs/inifile&rdquo;</p>
+
+<p>```
+Generates:</p>
 
 <p><code>
 modules
@@ -71,28 +103,7 @@ modules
 └── sensu-sensu (v1.0.0)
 </code></p>
 
-<p>```
-forge &ldquo;<a href="http://forge.puppetlabs.com">http://forge.puppetlabs.com</a>&rdquo;</p>
-
-<p>mod &ldquo;rodjek/logrotate&rdquo;</p>
-
-<p>mod &ldquo;elasticsearch/logstash&rdquo;
-mod &ldquo;elasticsearch/elasticsearch&rdquo;
-mod &ldquo;sensu/sensu&rdquo;</p>
-
-<p>mod &ldquo;puppetlabs/ntp&rdquo;
-mod &ldquo;puppetlabs/mcollective&rdquo;,
-  :git => &lsquo;<a href="https://github.com/matthewbarr/puppetlabs-mcollective.git">https://github.com/matthewbarr/puppetlabs-mcollective.git</a>&rsquo;,
-  :ref => &lsquo;kensho&rsquo;</p>
-
-<p>mod &ldquo;puppetlabs/vcsrepo&rdquo;
-mod &ldquo;puppetlabs/git&rdquo;</p>
-
-<p>mod &ldquo;jfryman/nginx&rdquo;
-mod &ldquo;garethr/graphite&rdquo;
-mod &ldquo;puppetlabs/inifile&rdquo;</p>
-
-<p>```</p>
+<p>Which is 25/45 of my original modules.  I was also able to remove a few dependencies, and upgraded a few of the modules.</p>
 ]]></content>
   </entry>
   
