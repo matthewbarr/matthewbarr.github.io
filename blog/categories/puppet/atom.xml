@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Puppet | Random Natterings]]></title>
   <link href="http://blog.mbarr.net/blog/categories/puppet/atom.xml" rel="self"/>
   <link href="http://blog.mbarr.net/"/>
-  <updated>2014-05-22T15:29:00-04:00</updated>
+  <updated>2014-05-22T15:57:23-04:00</updated>
   <id>http://blog.mbarr.net/</id>
   <author>
     <name><![CDATA[Matthew Barr]]></name>
@@ -20,7 +20,7 @@
     <id>http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet</id>
     <content type="html"><![CDATA[<p>So&hellip; The office hit a point where I had way too many modules installed from the forge &amp; git, and it was past the point of being a problem.</p>
 
-<p>(Beyond the maintaince problem, we also hit an issue for using <a href="/blog/2014/05/22/puppet-for-packer-and-docker/">Packer &amp; Docker</a> )</p>
+<p>(Beyond the maintenance problem, we also hit an issue for using <a href="/blog/2014/05/22/puppet-for-packer-and-docker/">Packer &amp; Docker</a> )</p>
 
 <p>We&rsquo;ve implemented a hybrid roles &amp; providers model, so we end up w/ quite a few custom modules for our needs.</p>
 
@@ -32,7 +32,7 @@
 
 <p>However, I <em>really</em> didn&rsquo;t want to have to move all my code to a new repo, and especially didn&rsquo;t want to move each module to it&rsquo;s <em>own</em> repo.  This is all being maintained by one person right now, and the dev&rsquo;s have enough trouble w/ it being in it&rsquo;s own repo, vs the main code repo.</p>
 
-<p>Eventually I realzied that I could move the custom modules to their own module directory, and use the main &ldquo;modules&rdquo; directory for librarian-puppet.</p>
+<p>Eventually I realized that I could move the custom modules to their own module directory, and use the main &ldquo;modules&rdquo; directory for librarian-puppet.</p>
 
 <p>In order for this to work, I had to modify puppet.conf to have</p>
 

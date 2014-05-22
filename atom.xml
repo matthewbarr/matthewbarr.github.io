@@ -4,7 +4,7 @@
   <title><![CDATA[Random Natterings]]></title>
   <link href="http://blog.mbarr.net/atom.xml" rel="self"/>
   <link href="http://blog.mbarr.net/"/>
-  <updated>2014-05-22T15:29:00-04:00</updated>
+  <updated>2014-05-22T15:57:23-04:00</updated>
   <id>http://blog.mbarr.net/</id>
   <author>
     <name><![CDATA[Matthew Barr]]></name>
@@ -18,9 +18,9 @@
     <link href="http://blog.mbarr.net/blog/2014/05/22/puppet-for-packer-and-docker/"/>
     <updated>2014-05-22T15:22:20-04:00</updated>
     <id>http://blog.mbarr.net/blog/2014/05/22/puppet-for-packer-and-docker</id>
-    <content type="html"><![CDATA[<p>In <a href="http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet/">Moving to Librarian-puppet</a> I mentioned that we needed to keep 3 differnt sets of puppet stacks around.  I thought I&rsquo;d expand on it.</p>
+    <content type="html"><![CDATA[<p>In <a href="http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet/">Moving to Librarian-puppet</a> I mentioned that we needed to keep 3 different sets of puppet stacks around.  I thought I&rsquo;d expand on it.</p>
 
-<p>There will likley be a part 2, &amp; maybe 3, as I describe what we have inside our puppet provioner code for packer, and then later for docker&hellip;</p>
+<p>There will likely be a part 2, &amp; maybe 3, as I describe what we have inside our puppet provisioner code for packer, and then later for docker&hellip;</p>
 
 <p>We&rsquo;re using 2 different sets of puppet stacks, similar, but not quite the same, and testing a third:</p>
 
@@ -31,7 +31,7 @@
 </ol>
 
 
-<p>These are different because we install and start different parts based on which portion of the build is invovled.</p>
+<p>These are different because we install and start different parts based on which portion of the build is involved.</p>
 
 <h4>Packer</h4>
 
@@ -47,7 +47,7 @@
 
 <p>However, we will still build AMI&rsquo;s for the host systems, running mcollective &amp; puppet, sensu for monitoring, and probably the nginx webserver/proxy for the uwsgi containers.  We&rsquo;ll also include in the packer built AMI&rsquo;s the docker images, so these systems can be deployed via autoscaling.</p>
 
-<p>This will mean we&rsquo;ll have a different set of requirements for puppet in the docker systems.  We&rsquo;ll be getting rid of much of the code deployment related fucntions, but still keeping most of the other parts.   And we&rsquo;ll have to add docker related functionality &amp; mgmt.</p>
+<p>This will mean we&rsquo;ll have a different set of requirements for puppet in the docker systems.  We&rsquo;ll be getting rid of much of the code deployment related functions, but still keeping most of the other parts.   And we&rsquo;ll have to add docker related functionality &amp; mgmt.</p>
 ]]></content>
   </entry>
   
@@ -58,7 +58,7 @@
     <id>http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet</id>
     <content type="html"><![CDATA[<p>So&hellip; The office hit a point where I had way too many modules installed from the forge &amp; git, and it was past the point of being a problem.</p>
 
-<p>(Beyond the maintaince problem, we also hit an issue for using <a href="http://blog.mbarr.net/blog/2014/05/22/puppet-for-packer-and-docker/">Packer &amp; Docker</a> )</p>
+<p>(Beyond the maintenance problem, we also hit an issue for using <a href="http://blog.mbarr.net/blog/2014/05/22/puppet-for-packer-and-docker/">Packer &amp; Docker</a> )</p>
 
 <p>We&rsquo;ve implemented a hybrid roles &amp; providers model, so we end up w/ quite a few custom modules for our needs.</p>
 
@@ -70,7 +70,7 @@
 
 <p>However, I <em>really</em> didn&rsquo;t want to have to move all my code to a new repo, and especially didn&rsquo;t want to move each module to it&rsquo;s <em>own</em> repo.  This is all being maintained by one person right now, and the dev&rsquo;s have enough trouble w/ it being in it&rsquo;s own repo, vs the main code repo.</p>
 
-<p>Eventually I realzied that I could move the custom modules to their own module directory, and use the main &ldquo;modules&rdquo; directory for librarian-puppet.</p>
+<p>Eventually I realized that I could move the custom modules to their own module directory, and use the main &ldquo;modules&rdquo; directory for librarian-puppet.</p>
 
 <p>In order for this to work, I had to modify puppet.conf to have</p>
 
