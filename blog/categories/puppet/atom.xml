@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Puppet | Random Natterings]]></title>
   <link href="http://blog.mbarr.net/blog/categories/puppet/atom.xml" rel="self"/>
   <link href="http://blog.mbarr.net/"/>
-  <updated>2014-05-22T15:02:17-04:00</updated>
+  <updated>2014-05-22T15:26:22-04:00</updated>
   <id>http://blog.mbarr.net/</id>
   <author>
     <name><![CDATA[Matthew Barr]]></name>
@@ -20,7 +20,7 @@
     <id>http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet</id>
     <content type="html"><![CDATA[<p>So&hellip; The office hit a point where I had way too many modules installed from the forge &amp; git, and it was past the point of being a problem.</p>
 
-<p>(Beyond the maintaince problem, we also hit an issue for using <a href="#packer">Packer &amp; Docker</a> )</p>
+<p>(Beyond the maintaince problem, we also hit an issue for using <a href="/blog/2014/05/22/puppet-for-packer-and-docker/">Packer &amp; Docker</a> )</p>
 
 <p>We&rsquo;ve implemented a hybrid roles &amp; providers model, so we end up w/ quite a few custom modules for our needs.</p>
 
@@ -104,6 +104,14 @@ modules
 </code></p>
 
 <p>Which is 25/45 of my original modules.  I was also able to remove a few dependencies, and upgraded a few of the modules.</p>
+
+<p>It also meant that I had to extract my changes to a few upstream modules, and send them up as PR&rsquo;s.  In the end, the only critical one was a few modifications to the puppetlabs-mcollective module, which is why I&rsquo;m currently using a git fork.  PR&rsquo;s have been raised for most of the changes, but they aren&rsquo;t live yet.</p>
+
+<ul>
+<li><a href="https://github.com/puppetlabs/puppetlabs-mcollective/pull/109">Extra Yaml in mco</a> Needs more work.</li>
+<li><a href="https://github.com/puppetlabs/puppetlabs-mcollective/pull/145">Remove Erlang dependency</a></li>
+</ul>
+
 ]]></content>
   </entry>
   

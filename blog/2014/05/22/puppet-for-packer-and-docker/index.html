@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Puppet - Random Natterings</title>
+  <title>Puppet for Packer &amp; Docker - Random Natterings</title>
   <meta name="author" content="Matthew Barr">
 
   
-  <meta name="description" content="Category: puppet">
+  <meta name="description" content="In Moving to Librarian-puppet I mentioned that we needed to keep 3 differnt sets of puppet stacks around. I thought I&rsquo;d expand on it. There &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.mbarr.netblog/categories/puppet">
+  <link rel="canonical" href="http://blog.mbarr.net/blog/2014/05/22/puppet-for-packer-and-docker">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Random Natterings" type="application/atom+xml">
@@ -64,35 +64,107 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Puppet</h1>
+    
+      <h1 class="entry-title">Puppet for Packer &amp; Docker</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-22T15:22:20-04:00" pubdate data-updated="true">May 22<span>nd</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>In <a href="/blog/2014/05/22/moving-to-librarian-puppet/">Moving to Librarian-puppet</a> I mentioned that we needed to keep 3 differnt sets of puppet stacks around.  I thought I&rsquo;d expand on it.</p>
 
-  
-  <h2>2014</h2>
+<p>There will likley be a part 2, &amp; maybe 3, as I describe what we have inside our puppet provioner code for packer, and then later for docker&hellip;</p>
 
-<article>
-  
-<h1><a href="/blog/2014/05/22/moving-to-librarian-puppet/">Moving to Librarian-puppet</a></h1>
-<time datetime="2014-05-22T10:47:01-04:00" pubdate><span class='month'>May</span> <span class='day'>22</span> <span class='year'>2014</span></time>
+<p>We&rsquo;re using 2 different sets of puppet stacks, similar, but not quite the same, and testing a third:</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/puppet/'>puppet</a></span>
-</footer>
+<ol>
+<li>one to build AMI&rsquo;s, installing software, but typically not starting it.</li>
+<li>the full build</li>
+<li>testing docker</li>
+</ol>
 
 
-</article>
+<p>These are different because we install and start different parts based on which portion of the build is invovled.</p>
 
+<h4>Packer</h4>
+
+<p>For Packer, we want to install all the pieces, especially packages with large dependency chains.  We <em>don&rsquo;t</em> want to start services, but putting config files in place is helpful.  We also currently put a copy of the code git checkout in place, so that VCSrepo updates can happen very quickly, only needing to download delta&rsquo;s from upstream.</p>
+
+<h4>Full Build</h4>
+
+<p>In the full build, we need to make sure that everything is installed, and running.  We also add some runtime cache cleanup code that wouldn&rsquo;t be helpful in the packer AMI build, and also leave out some scripts that update mcollective caches and drop extra facts into it&rsquo;s cache. <a href="https://github.com/puppetlabs/puppetlabs-mcollective/pull/109">Extra Yaml in mco</a></p>
+
+<h4>Docker</h4>
+
+<p>Docker is new target for us.  We&rsquo;re hoping to move to move to Docker for building containers with our code + virtualenv &amp; running either celery or uwsgi.  We hope to be able to use the same artifacts from dev-> prod, and that it will make life easier to update running versions of code.</p>
+
+<p>However, we will still build AMI&rsquo;s for the host systems, running mcollective &amp; puppet, sensu for monitoring, and probably the nginx webserver/proxy for the uwsgi containers.  We&rsquo;ll also include in the packer built AMI&rsquo;s the docker images, so these systems can be deployed via autoscaling.</p>
+
+<p>This will mean we&rsquo;ll have a different set of requirements for puppet in the docker systems.  We&rsquo;ll be getting rid of much of the code deployment related fucntions, but still keeping most of the other parts.   And we&rsquo;ll have to add docker related functionality &amp; mgmt.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Matthew Barr</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-22T15:22:20-04:00" pubdate data-updated="true">May 22<span>nd</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.mbarr.net/blog/2014/05/22/puppet-for-packer-and-docker/" data-via="matthewbarr" data-counturl="http://blog.mbarr.net/blog/2014/05/22/puppet-for-packer-and-docker/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/05/22/moving-to-librarian-puppet/" title="Previous Post: Moving to librarian-puppet">&laquo; Moving to librarian-puppet</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

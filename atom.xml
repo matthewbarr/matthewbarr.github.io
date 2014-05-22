@@ -4,7 +4,7 @@
   <title><![CDATA[Random Natterings]]></title>
   <link href="http://blog.mbarr.net/atom.xml" rel="self"/>
   <link href="http://blog.mbarr.net/"/>
-  <updated>2014-05-22T15:02:17-04:00</updated>
+  <updated>2014-05-22T15:26:22-04:00</updated>
   <id>http://blog.mbarr.net/</id>
   <author>
     <name><![CDATA[Matthew Barr]]></name>
@@ -14,13 +14,51 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Puppet for Packer &amp; Docker]]></title>
+    <link href="http://blog.mbarr.net/blog/2014/05/22/puppet-for-packer-and-docker/"/>
+    <updated>2014-05-22T15:22:20-04:00</updated>
+    <id>http://blog.mbarr.net/blog/2014/05/22/puppet-for-packer-and-docker</id>
+    <content type="html"><![CDATA[<p>In <a href="http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet/">Moving to Librarian-puppet</a> I mentioned that we needed to keep 3 differnt sets of puppet stacks around.  I thought I&rsquo;d expand on it.</p>
+
+<p>There will likley be a part 2, &amp; maybe 3, as I describe what we have inside our puppet provioner code for packer, and then later for docker&hellip;</p>
+
+<p>We&rsquo;re using 2 different sets of puppet stacks, similar, but not quite the same, and testing a third:</p>
+
+<ol>
+<li>one to build AMI&rsquo;s, installing software, but typically not starting it.</li>
+<li>the full build</li>
+<li>testing docker</li>
+</ol>
+
+
+<p>These are different because we install and start different parts based on which portion of the build is invovled.</p>
+
+<h4>Packer</h4>
+
+<p>For Packer, we want to install all the pieces, especially packages with large dependency chains.  We <em>don&rsquo;t</em> want to start services, but putting config files in place is helpful.  We also currently put a copy of the code git checkout in place, so that VCSrepo updates can happen very quickly, only needing to download delta&rsquo;s from upstream.</p>
+
+<h4>Full Build</h4>
+
+<p>In the full build, we need to make sure that everything is installed, and running.  We also add some runtime cache cleanup code that wouldn&rsquo;t be helpful in the packer AMI build, and also leave out some scripts that update mcollective caches and drop extra facts into it&rsquo;s cache. <a href="https://github.com/puppetlabs/puppetlabs-mcollective/pull/109">Extra Yaml in mco</a></p>
+
+<h4>Docker</h4>
+
+<p>Docker is new target for us.  We&rsquo;re hoping to move to move to Docker for building containers with our code + virtualenv &amp; running either celery or uwsgi.  We hope to be able to use the same artifacts from dev-> prod, and that it will make life easier to update running versions of code.</p>
+
+<p>However, we will still build AMI&rsquo;s for the host systems, running mcollective &amp; puppet, sensu for monitoring, and probably the nginx webserver/proxy for the uwsgi containers.  We&rsquo;ll also include in the packer built AMI&rsquo;s the docker images, so these systems can be deployed via autoscaling.</p>
+
+<p>This will mean we&rsquo;ll have a different set of requirements for puppet in the docker systems.  We&rsquo;ll be getting rid of much of the code deployment related fucntions, but still keeping most of the other parts.   And we&rsquo;ll have to add docker related functionality &amp; mgmt.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Moving to Librarian-puppet]]></title>
     <link href="http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet/"/>
     <updated>2014-05-22T10:47:01-04:00</updated>
     <id>http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet</id>
     <content type="html"><![CDATA[<p>So&hellip; The office hit a point where I had way too many modules installed from the forge &amp; git, and it was past the point of being a problem.</p>
 
-<p>(Beyond the maintaince problem, we also hit an issue for using <a href="#packer">Packer &amp; Docker</a> )</p>
+<p>(Beyond the maintaince problem, we also hit an issue for using <a href="http://blog.mbarr.net/blog/2014/05/22/puppet-for-packer-and-docker/">Packer &amp; Docker</a> )</p>
 
 <p>We&rsquo;ve implemented a hybrid roles &amp; providers model, so we end up w/ quite a few custom modules for our needs.</p>
 
@@ -151,6 +189,14 @@
 
 
 <p>Which is 25/45 of my original modules.  I was also able to remove a few dependencies, and upgraded a few of the modules.</p>
+
+<p>It also meant that I had to extract my changes to a few upstream modules, and send them up as PR&rsquo;s.  In the end, the only critical one was a few modifications to the puppetlabs-mcollective module, which is why I&rsquo;m currently using a git fork.  PR&rsquo;s have been raised for most of the changes, but they aren&rsquo;t live yet.</p>
+
+<ul>
+<li><a href="https://github.com/puppetlabs/puppetlabs-mcollective/pull/109">Extra Yaml in mco</a> Needs more work.</li>
+<li><a href="https://github.com/puppetlabs/puppetlabs-mcollective/pull/145">Remove Erlang dependency</a></li>
+</ul>
+
 ]]></content>
   </entry>
   
