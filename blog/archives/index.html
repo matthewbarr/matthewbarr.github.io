@@ -9,8 +9,9 @@
   <meta name="author" content="Matthew Barr">
 
   
-  <meta name="description" content="Blog Archive 2014 Uhm&#8230; Hello?
-Jan 12 2014 Recent Posts Uhm... Hello? GitHub Repos Status updating... @matthewbarr on GitHub $(document).ready( &hellip;">
+  <meta name="description" content="Blog Archive 2014 Moving to Librarian-puppet
+May 22 2014 posted in puppet Uhm&#8230; Hello?
+Jan 12 2014 Recent Posts Moving to Librarian-puppet Uhm &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +82,20 @@ Jan 12 2014 Recent Posts Uhm... Hello? GitHub Repos Status updating... @matthewb
 
 <article>
   
+<h1><a href="/blog/2014/05/22/moving-to-librarian-puppet/">Moving to Librarian-puppet</a></h1>
+<time datetime="2014-05-22T10:47:01-04:00" pubdate><span class='month'>May</span> <span class='day'>22</span> <span class='year'>2014</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/puppet/'>puppet</a></span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
 <h1><a href="/blog/2014/01/12/uhm-dot-dot-dot-hello/">Uhm&#8230; Hello?</a></h1>
 <time datetime="2014-01-12T01:29:12-05:00" pubdate><span class='month'>Jan</span> <span class='day'>12</span> <span class='year'>2014</span></time>
 
@@ -101,11 +116,53 @@ Jan 12 2014 Recent Posts Uhm... Hello? GitHub Repos Status updating... @matthewb
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/22/moving-to-librarian-puppet/">Moving to Librarian-puppet</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/12/uhm-dot-dot-dot-hello/">Uhm... Hello?</a>
       </li>
     
   </ul>
 </section>
+
+<section>
+  <h1>About Me</h1>
+  <div id="twitter-profile" style="margin-top:0.5em;">
+    <p>
+      <strong>Matthew Barr</strong> 
+      (<a href="http://twitter.com/matthewbarr">@matthewbarr</a>)
+    </p>
+    <p></p>
+  </div>
+  <script type="text/javascript">
+    $(function(){
+        var container = $('#twitter-profile'),
+            user = "matthewbarr";
+        
+        function parseTwLinks(s) {
+          var twUrl = "http://www.twitter.com/"
+          s = s.replace(/ (@([\w]+))/g, function(match, p1, p2) {
+              return " <a href='"+twUrl+p2+"'>"+p1+"</a>"
+          }).replace(/ (#([\w]+))/g, function(match, p1, p2) {
+              return " <a href='"+twUrl+"#!/search?q=%23"+p2+"'>"+p1+"</a>"
+          })
+          return s
+        }
+
+        $.ajax({
+            url: "http://api.twitter.com/1/users/show.json?include_entities=false&screen_name="+user+"&callback=?"
+          , type: 'GET'
+          , dataType: 'jsonp'
+          , error: function (err) { $('#twitter-profile').addClass('error');  }
+          , success: function(data) {
+              container.html('<img class="left" src="http://api.twitter.com/1/users/profile_image/'+user+'.json?size=bigger" alt="@'+user+'"><p><strong>'+data.name+'</strong> (<a href="http://twitter.com/'+user+'">@'+user+'</a>)<br/>'+data.location+'</p><p>'+parseTwLinks(data.description)+'</p>');
+            }
+        })
+      });
+  </script>
+</section>
+
 
 <section>
   <h1>GitHub Repos</h1>

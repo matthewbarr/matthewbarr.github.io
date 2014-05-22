@@ -4,14 +4,147 @@
   <title><![CDATA[Random Natterings]]></title>
   <link href="http://blog.mbarr.net/atom.xml" rel="self"/>
   <link href="http://blog.mbarr.net/"/>
-  <updated>2014-01-12T02:00:04-05:00</updated>
+  <updated>2014-05-22T12:25:07-04:00</updated>
   <id>http://blog.mbarr.net/</id>
   <author>
     <name><![CDATA[Matthew Barr]]></name>
-    
+    <email><![CDATA[mbarr@mbarr.net]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Moving to Librarian-puppet]]></title>
+    <link href="http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet/"/>
+    <updated>2014-05-22T10:47:01-04:00</updated>
+    <id>http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet</id>
+    <content type="html"><![CDATA[<p>So&hellip; The office hit a point where I had way too many modules installed from the forge &amp; git, and it was past the point of being a problem.</p>
+
+<p>We&rsquo;re using 2 different sets of puppet stacks, similar, but not quite the same, and testing a third:</p>
+
+<ol>
+<li>one to build AMI&rsquo;s, installing software, but typically not starting it.</li>
+<li>the full build</li>
+<li>testing docker</li>
+</ol>
+
+
+<p>We&rsquo;ve implemented a hybrid roles &amp; providers model, so we end up w/ quite a few custom modules for our needs.</p>
+
+<p>However,</p>
+
+<p>|activemq|concat|   git|    kenshosensu|r53dns
+|apache|    dasher| graphite|logrotate|rabbitmq
+|apt|   datacat|    hiera_param|logstash|redirector
+|augeasproviders|elasticsearch|inifile| mcollective|sensu
+|boolean|   epel|   java|   nginx|  staging
+|bunny| erlang| java_ks|    ntp|    stdlib
+|celery|    file_concat|kenshoelasticsearch puppet_zulip|users
+|code|  firewall|kenshologstash|puppetcrontab|vcsrepo
+|common|    flower| kenshorepo|python|  webserver</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>modules
+</span><span class='line'>├── elasticsearch-elasticsearch (v0.3.2)
+</span><span class='line'>├── elasticsearch-logstash (v0.5.1)
+</span><span class='line'>├── footballradar-python (v0.1.0)
+</span><span class='line'>├── garethr-graphite (v0.3.0)
+</span><span class='line'>├── ispavailability-file_concat (v0.1.0)
+</span><span class='line'>├── jfryman-nginx (v0.0.9)
+</span><span class='line'>├── mcollective (???)
+</span><span class='line'>├── nanliu-staging (v0.4.0)
+</span><span class='line'>├── puppetlabs-activemq (v0.2.0)
+</span><span class='line'>├── puppetlabs-apache (v0.6.0)
+</span><span class='line'>├── puppetlabs-apt (v1.4.2)
+</span><span class='line'>├── puppetlabs-concat (v1.1.0)
+</span><span class='line'>├── puppetlabs-firewall (v1.1.1)
+</span><span class='line'>├── puppetlabs-git (v0.0.3)
+</span><span class='line'>├── puppetlabs-inifile (v1.0.3)
+</span><span class='line'>├── puppetlabs-java (v1.1.1)
+</span><span class='line'>├── puppetlabs-java_ks (v1.2.3)
+</span><span class='line'>├── puppetlabs-ntp (v3.0.3)
+</span><span class='line'>├── puppetlabs-rabbitmq (v4.0.0)
+</span><span class='line'>├── puppetlabs-stdlib (v4.2.1)
+</span><span class='line'>├── puppetlabs-vcsrepo (v0.2.0)
+</span><span class='line'>├── richardc-datacat (v0.4.3)
+</span><span class='line'>├── rodjek-logrotate (v1.0.2)
+</span><span class='line'>└── sensu-sensu (v1.0.0)</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>forge "http://forge.puppetlabs.com"
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>mod "rodjek/logrotate"
+</span><span class='line'>
+</span><span class='line'>mod "elasticsearch/logstash"
+</span><span class='line'>mod "elasticsearch/elasticsearch"
+</span><span class='line'>mod "sensu/sensu"
+</span><span class='line'>
+</span><span class='line'>mod "puppetlabs/ntp"
+</span><span class='line'>mod "puppetlabs/mcollective",
+</span><span class='line'>  :git =&gt; 'https://github.com/matthewbarr/puppetlabs-mcollective.git',
+</span><span class='line'>  :ref =&gt; 'kensho'
+</span><span class='line'>
+</span><span class='line'>mod "puppetlabs/vcsrepo"
+</span><span class='line'>mod "puppetlabs/git"
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>mod "jfryman/nginx"
+</span><span class='line'>mod "garethr/graphite"
+</span><span class='line'>mod "puppetlabs/inifile"
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Uhm... Hello?]]></title>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Puppet | Random Natterings]]></title>
+  <link href="http://blog.mbarr.net/blog/categories/puppet/atom.xml" rel="self"/>
+  <link href="http://blog.mbarr.net/"/>
+  <updated>2014-05-22T12:25:07-04:00</updated>
+  <id>http://blog.mbarr.net/</id>
+  <author>
+    <name><![CDATA[Matthew Barr]]></name>
+    <email><![CDATA[mbarr@mbarr.net]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Moving to Librarian-puppet]]></title>
+    <link href="http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet/"/>
+    <updated>2014-05-22T10:47:01-04:00</updated>
+    <id>http://blog.mbarr.net/blog/2014/05/22/moving-to-librarian-puppet</id>
+    <content type="html"><![CDATA[<p>So&hellip; The office hit a point where I had way too many modules installed from the forge &amp; git, and it was past the point of being a problem.</p>
+
+<p>We&rsquo;re using 2 different sets of puppet stacks, similar, but not quite the same, and testing a third:</p>
+
+<ol>
+<li>one to build AMI&rsquo;s, installing software, but typically not starting it.</li>
+<li>the full build</li>
+<li>testing docker</li>
+</ol>
+
+
+<p>We&rsquo;ve implemented a hybrid roles &amp; providers model, so we end up w/ quite a few custom modules for our needs.</p>
+
+<p>However,</p>
+
+<p>|activemq|concat|   git|    kenshosensu|r53dns
+|apache|    dasher| graphite|logrotate|rabbitmq
+|apt|   datacat|    hiera_param|logstash|redirector
+|augeasproviders|elasticsearch|inifile| mcollective|sensu
+|boolean|   epel|   java|   nginx|  staging
+|bunny| erlang| java_ks|    ntp|    stdlib
+|celery|    file_concat|kenshoelasticsearch puppet_zulip|users
+|code|  firewall|kenshologstash|puppetcrontab|vcsrepo
+|common|    flower| kenshorepo|python|  webserver</p>
+
+<p><code>
+modules
+├── elasticsearch-elasticsearch (v0.3.2)
+├── elasticsearch-logstash (v0.5.1)
+├── footballradar-python (v0.1.0)
+├── garethr-graphite (v0.3.0)
+├── ispavailability-file_concat (v0.1.0)
+├── jfryman-nginx (v0.0.9)
+├── mcollective (???)
+├── nanliu-staging (v0.4.0)
+├── puppetlabs-activemq (v0.2.0)
+├── puppetlabs-apache (v0.6.0)
+├── puppetlabs-apt (v1.4.2)
+├── puppetlabs-concat (v1.1.0)
+├── puppetlabs-firewall (v1.1.1)
+├── puppetlabs-git (v0.0.3)
+├── puppetlabs-inifile (v1.0.3)
+├── puppetlabs-java (v1.1.1)
+├── puppetlabs-java_ks (v1.2.3)
+├── puppetlabs-ntp (v3.0.3)
+├── puppetlabs-rabbitmq (v4.0.0)
+├── puppetlabs-stdlib (v4.2.1)
+├── puppetlabs-vcsrepo (v0.2.0)
+├── richardc-datacat (v0.4.3)
+├── rodjek-logrotate (v1.0.2)
+└── sensu-sensu (v1.0.0)
+</code></p>
+
+<p>```
+forge &ldquo;<a href="http://forge.puppetlabs.com">http://forge.puppetlabs.com</a>&rdquo;</p>
+
+<p>mod &ldquo;rodjek/logrotate&rdquo;</p>
+
+<p>mod &ldquo;elasticsearch/logstash&rdquo;
+mod &ldquo;elasticsearch/elasticsearch&rdquo;
+mod &ldquo;sensu/sensu&rdquo;</p>
+
+<p>mod &ldquo;puppetlabs/ntp&rdquo;
+mod &ldquo;puppetlabs/mcollective&rdquo;,
+  :git => &lsquo;<a href="https://github.com/matthewbarr/puppetlabs-mcollective.git">https://github.com/matthewbarr/puppetlabs-mcollective.git</a>&rsquo;,
+  :ref => &lsquo;kensho&rsquo;</p>
+
+<p>mod &ldquo;puppetlabs/vcsrepo&rdquo;
+mod &ldquo;puppetlabs/git&rdquo;</p>
+
+<p>mod &ldquo;jfryman/nginx&rdquo;
+mod &ldquo;garethr/graphite&rdquo;
+mod &ldquo;puppetlabs/inifile&rdquo;</p>
+
+<p>```</p>
+]]></content>
+  </entry>
+  
+</feed>
